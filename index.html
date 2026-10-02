@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amy's Philosophy Dashboard</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Segoe UI,Arial,sans-serif;
+}
+
+:root{
+    --bg:#f6f2f8;
+    --card:#ffffff;
+    --text:#29202f;
+    --muted:#817687;
+    --primary:#76528a;
+    --secondary:#a98aba;
+    --light:#eee6f2;
+    --border:#e7dfea;
+}
+
+body.dark{
+    --bg:#18141c;
+    --card:#241e29;
+    --text:#f5edf8;
+    --muted:#b9aebe;
+    --primary:#bd91d0;
+    --secondary:#9368a8;
+    --light:#342b3a;
+    --border:#45384b;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    transition:.3s;
+}
+
+header{
+    background:linear-gradient(135deg,#634476,#a277b5);
+    color:white;
+    padding:35px 7%;
+    border-radius:0 0 30px 30px;
+}
+
+.header-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+header h1{
+    font-size:32px;
+}
+
+header p{
+    margin-top:8px;
+    opacity:.9;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    border-radius:10px;
+    padding:10px 15px;
+    font-weight:600;
+}
+
+.theme-btn{
+    background:rgba(255,255,255,.2);
+    color:white;
+}
+
+.container{
+    width:86%;
+    max-width:1200px;
+    margin:30px auto;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.card,.section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.card{
+    padding:22px;
+}
+
+.card h3{
+    font-size:14px;
+    color:var(--muted);
+    margin-bottom:8px;
+}
+
+.big{
+    font-size:29px;
+    font-weight:bold;
+    color:var(--primary);
+}
+
+.section{
+    padding:25px;
+    margin-top:22px;
+}
+
+.section h2{
+    margin-bottom:20px;
+    color:var(--primary);
+}
+
+.goal{
+    margin-bottom:18px;
+}
+
+.goal-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+}
+
+.progress{
+    height:10px;
+    background:var(--light);
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    border-radius:20px;
+    transition:.5s;
+}
+
+.subject-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.subject{
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:15px;
+}
+
+.subject input{
+    width:100%;
+    margin-top:12px;
+    padding:10px;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    border-radius:8px;
+}
+
+.task{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:13px;
+    margin-bottom:10px;
+    background:var(--bg);
+    border-radius:10px;
+}
+
+.task input{
+    accent-color:var(--primary);
+}
+
+.task.done{
+    text-decoration:line-through;
+    opacity:.6;
+}
+
+textarea,input,select{
+    font-size:15px;
+}
+
+.timer{
+    text-align:center;
+}
+
+.timer-display{
+    font-size:60px;
+    font-weight:bold;
+    color:var(--primary);
+    margin:15px;
+}
+
+.timer button{
+    background:var(--primary);
+    color:white;
+    margin:4px;
+}
+
+.timer button.secondary{
+    background:var(--light);
+    color:var(--text);
+}
+
+.study-form{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.study-form input{
+    padding:11px;
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    border-radius:8px;
+}
+
+.study-form button{
+    background:var(--primary);
+    color:white;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+}
+
+.cgpa-result{
+    margin-top:15px;
+    font-size:20px;
+    font-weight:bold;
+    color:var(--primary);
+}
+
+footer{
+    text-align:center;
+    color:var(--muted);
+    padding:30px;
+}
+
+@media(max-width:850px){
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:600px){
+    .grid,.subject-grid{
+        grid-template-columns:1fr;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .header-row{
+        align-items:flex-start;
+    }
+
+    header h1{
+        font-size:25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-row">
+        <div>
+            <h1>📚 Amy's Philosophy Dashboard</h1>
+            <p>Honours 2nd Year • Study • Skills • Growth</p>
+        </div>
+
+        <button class="theme-btn" onclick="toggleDark()">
+            🌙 Dark Mode
+        </button>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- SUMMARY -->
+
+<div class="grid">
+
+    <div class="card">
+        <h3>🎯 CGPA Target</h3>
+        <div class="big">4.00</div>
+    </div>
+
+    <div class="card">
+        <h3>✅ Tasks Completed</h3>
+        <div class="big" id="taskCount">0%</div>
+    </div>
+
+    <div class="card">
+        <h3>⏱ Study Hours</h3>
+        <div class="big" id="studyHours">0 h</div>
+    </div>
+
+    <div class="card">
+        <h3>🔥 Current Streak</h3>
+        <div class="big">Day 1</div>
+    </div>
+
+</div>
+
+
+<!-- GOALS -->
+
+<div class="section">
+
+<h2>🎯 2nd Year Goals</h2>
+
+<div class="goal">
+    <div class="goal-head">
+        <span>CGPA 4.00</span>
+        <span id="cgpaPercent">0%</span>
+    </div>
+    <div class="progress">
+        <div class="bar" id="cgpaBar"></div>
+    </div>
+</div>
+
+<div class="goal">
+    <div class="goal-head">
+        <span>IELTS Preparation</span>
+        <span>20%</span>
+    </div>
+    <div class="progress">
+        <div class="bar" style="width:20%"></div>
+    </div>
+</div>
+
+<div class="goal">
+    <div class="goal-head">
+        <span>Excel</span>
+        <span>30%</span>
+    </div>
+    <div class="progress">
+        <div class="bar" style="width:30%"></div>
+    </div>
+</div>
+
+<div class="goal">
+    <div class="goal-head">
+        <span>MS Word</span>
+        <span>15%</span>
+    </div>
+    <div class="progress">
+        <div class="bar" style="width:15%"></div>
+    </div>
+</div>
+
+<div class="goal">
+    <div class="goal-head">
+        <span>PowerPoint</span>
+        <span>10%</span>
+    </div>
+    <div class="progress">
+        <div class="bar" style="width:10%"></div>
+    </div>
+</div>
+
+</div>
+
+
+<!-- CGPA CALCULATOR -->
+
+<div class="section">
+
+<h2>🎓 CGPA Calculator</h2>
+
+<div class="subject-grid">
+
+<div class="subject">
+    <b>Subject 1</b>
+    <input type="number" min="0" max="4" step="0.01"
+    class="grade" placeholder="Grade Point">
+</div>
+
+<div class="subject">
+    <b>Subject 2</b>
+    <input type="number" min="0" max="4" step="0.01"
+    class="grade" placeholder="Grade Point">
+</div>
+
+<div class="subject">
+    <b>Subject 3</b>
+    <input type="number" min="0" max="4" step="0.01"
+    class="grade" placeholder="Grade Point">
+</div>
+
+<div class="subject">
+    <b>Subject 4</b>
+    <input type="number" min="0" max="4" step="0.01"
+    class="grade" placeholder="Grade Point">
+</div>
+
+<div class="subject">
+    <b>Subject 5</b>
+    <input type="number" min="0" max="4" step="0.01"
+    class="grade" placeholder="Grade Point">
+</div>
+
+<div class="subject">
+    <b>Subject 6</b>
+    <input type="number" min="0" max="4" step="0.01"
+    class="grade" placeholder="Grade Point">
+</div>
+
+</div>
+
+<br>
+
+<button onclick="calculateCGPA()"
+style="background:var(--primary);color:white;">
+Calculate CGPA
+</button>
+
+<div class="cgpa-result" id="cgpaResult">
+Your CGPA will appear here.
+</div>
+
+</div>
+
+
+<!-- DAILY TASKS -->
+
+<div class="section">
+
+<h2>✅ Today's Tasks</h2>
+
+<div id="tasks">
+
+<div class="task">
+<input type="checkbox" onchange="updateTasks()">
+<span>Study Philosophy — 2 hours</span>
+</div>
+
+<div class="task">
+<input type="checkbox" onchange="updateTasks()">
+<span>IELTS Vocabulary — 30 minutes</span>
+</div>
+
+<div class="task">
+<input type="checkbox" onchange="updateTasks()">
+<span>Excel Practice — 30 minutes</span>
+</div>
+
+<div class="task">
+<input type="checkbox" onchange="updateTasks()">
+<span>English Reading — 20 minutes</span>
+</div>
+
+<div class="task">
+<input type="checkbox" onchange="updateTasks()">
+<span>Review today's notes</span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- POMODORO -->
+
+<div class="section timer">
+
+<h2>⏱ Pomodoro Timer</h2>
+
+<div class="timer-display" id="timer">
+25:00
+</div>
+
+<button onclick="startTimer()">Start</button>
+<button class="secondary" onclick="pauseTimer()">Pause</button>
+<button class="secondary" onclick="resetTimer()">Reset</button>
+
+<p style="margin-top:15px;color:var(--muted);">
+25 minutes focus • 5 minutes break
+</p>
+
+</div>
+
+
+<!-- STUDY TRACKER -->
+
+<div class="section">
+
+<h2>📊 Weekly Study Tracker</h2>
+
+<div class="study-form">
+
+<input type="number" id="studyInput"
+placeholder="Hours studied today" min="0" step="0.5">
+
+<button onclick="addStudy()">
+Add Hours
+</button>
+
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Study Hours</th>
+</tr>
+</thead>
+
+<tbody id="studyTable">
+<tr><td>Monday</td><td>0</td></tr>
+<tr><td>Tuesday</td><td>0</td></tr>
+<tr><td>Wednesday</td><td>0</td></tr>
+<tr><td>Thursday</td><td>0</td></tr>
+<tr><td>Friday</td><td>0</td></tr>
+<tr><td>Saturday</td><td>0</td></tr>
+<tr><td>Sunday</td><td>0</td></tr>
+</tbody>
+</table>
+
+</div>
+
+
+<!-- SKILLS -->
+
+<div class="section">
+
+<h2>💻 Skill Development</h2>
+
+<div class="subject-grid">
+
+<div class="subject">
+<h3>📊 Excel</h3>
+<p>Formulas • Tables • Charts • Pivot Tables</p>
+</div>
+
+<div class="subject">
+<h3>📝 MS Word</h3>
+<p>Academic documents • Formatting • References</p>
+</div>
+
+<div class="subject">
+<h3>🎨 PowerPoint</h3>
+<p>Slides • Design • Presentation Skills</p>
+</div>
+
+<div class="subject">
+<h3>🌎 IELTS</h3>
+<p>Listening • Reading • Writing • Speaking</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CLUB -->
+
+<div class="section">
+
+<h2>🏛 University Club</h2>
+
+<p>
+Target: Join a university club and participate in
+academic, cultural or extracurricular activities.
+</p>
+
+</div>
+
+
+<div class="section" style="text-align:center;">
+
+<h2>🧠 Philosophy Reminder</h2>
+
+<p style="font-size:18px;color:var(--muted);">
+"Question everything. Understand deeply. Write clearly."
+</p>
+
+</div>
+
+</div>
+
+<footer>
+Amy • Philosophy Department • Honours 2nd Year
+</footer>
+
+
+<script>
+
+/* DARK MODE */
+
+function toggleDark(){
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark")
+    );
+}
+
+if(localStorage.getItem("darkMode") === "true"){
+    document.body.classList.add("dark");
+}
+
+
+/* TASK TRACKER */
+
+function updateTasks(){
+
+    const tasks = document.querySelectorAll(".task");
+    let completed = 0;
+
+    tasks.forEach((task,index)=>{
+
+        const checkbox = task.querySelector("input");
+
+        if(checkbox.checked){
+            task.classList.add("done");
+            completed++;
+        }else{
+            task.classList.remove("done");
+        }
+
+    });
+
+    const percent =
+        Math.round((completed/tasks.length)*100);
+
+    document.getElementById("taskCount").innerText =
+        percent + "%";
+
+    localStorage.setItem("taskPercent",percent);
+}
+
+
+/* CGPA CALCULATOR */
+
+function calculateCGPA(){
+
+    const grades =
+        document.querySelectorAll(".grade");
+
+    let total = 0;
+    let count = 0;
+
+    grades.forEach(input=>{
+
+        const value = parseFloat(input.value);
+
+        if(!isNaN(value)){
+            total += value;
+            count++;
+        }
+
+    });
+
+    if(count === 0){
+
+        document.getElementById("cgpaResult").innerText =
+        "Enter at least one grade.";
+
+        return;
+    }
+
+    const cgpa = total/count;
+
+    document.getElementById("cgpaResult").innerText =
+    "Your CGPA: " + cgpa.toFixed(2);
+
+    const percentage =
+        Math.min((cgpa/4)*100,100);
+
+    document.getElementById("cgpaBar").style.width =
+        percentage + "%";
+
+    document.getElementById("cgpaPercent").innerText =
+        Math.round(percentage) + "%";
+
+    localStorage.setItem("cgpa",cgpa);
+}
+
+
+/* POMODORO */
+
+let time = 25 * 60;
+let timerInterval = null;
+
+function updateTimer(){
+
+    let minutes = Math.floor(time/60);
+    let seconds = time%60;
+
+    minutes = String(minutes).padStart(2,"0");
+    seconds = String(seconds).padStart(2,"0");
+
+    document.getElementById("timer").innerText =
+        minutes + ":" + seconds;
+}
+
+function startTimer(){
+
+    if(timerInterval) return;
+
+    timerInterval = setInterval(()=>{
+
+        if(time > 0){
+
+            time--;
+            updateTimer();
+
+        }else{
+
+            clearInterval(timerInterval);
+            timerInterval = null;
+
+            alert("🎉 Pomodoro complete! Take a short break.");
+
+        }
+
+    },1000);
+}
+
+function pauseTimer(){
+
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer(){
+
+    pauseTimer();
+
+    time = 25*60;
+
+    updateTimer();
+}
+
+updateTimer();
+
+
+/* STUDY HOURS */
+
+let totalStudyHours =
+    parseFloat(localStorage.getItem("studyHours")) || 0;
+
+document.getElementById("studyHours").innerText =
+    totalStudyHours + " h";
+
+function addStudy(){
+
+    const input =
+        document.getElementById("studyInput");
+
+    const hours =
+        parseFloat(input.value);
+
+    if(isNaN(hours) || hours <= 0){
+
+        alert("Enter valid study hours.");
+
+        return;
+    }
+
+    totalStudyHours += hours;
+
+    localStorage.setItem(
+        "studyHours",
+        totalStudyHours
+    );
+
+    document.getElementById("studyHours").innerText =
+        totalStudyHours + " h";
+
+    input.value = "";
+}
+
+
+/* LOAD SAVED CGPA */
+
+const savedCGPA =
+    parseFloat(localStorage.getItem("cgpa"));
+
+if(!isNaN(savedCGPA)){
+
+    const percentage =
+        Math.min((savedCGPA/4)*100,100);
+
+    document.getElementById("cgpaBar").style.width =
+        percentage + "%";
+
+    document.getElementById("cgpaPercent").innerText =
+        Math.round(percentage) + "%";
+}
+
+
+/* LOAD TASK PERCENT */
+
+const savedTasks =
+    localStorage.getItem("taskPercent");
+
+if(savedTasks){
+
+    document.getElementById("taskCount").innerText =
+        savedTasks + "%";
+}
+
+</script>
+
+</body>
+</html>
